@@ -1,24 +1,26 @@
 <idea-plugin version="2">
-  <name>BuildTree</name>
-  <description>Allow you to manage which modules use Idea builder</description>
-  <version>1.0</version>
-  <vendor>platonhov.me</vendor>
-  <idea-version since-build="8000"/>
+    <name>Flex Modules</name>
+    <description>Allow to manage which Flex modules are built by IntelliJ IDEA</description>
+    <version>1.0</version>
+    <vendor>platonov.me</vendor>
+    <idea-version since-build="8000"/>
 
-  <application-components>
-    <!-- Add your application components here -->
-  </application-components>
+    <depends>com.intellij.flex</depends>
 
-  <project-components>
-    <!-- Add your project components here -->
-  </project-components>
+    <application-components>
+        <!-- Add your application components here -->
+    </application-components>
 
-  <actions>
-    <!-- Add your actions here -->
-  </actions>
+    <project-components>
+        <!-- Add your project components here -->
+    </project-components>
 
-  <extensions defaultExtensionNs="com.intellij">
-    <!-- Add your extensions here -->
-      <toolWindow id="BuildTree" anchor="right" factoryClass="me.platonov.builderTree.BuildTreeToolWindow"/>
-  </extensions>
+    <actions>
+        <!-- Add your actions here -->
+    </actions>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <toolWindow id="Flex Modules" icon="/com/intellij/lang/javascript/flex/flex.png" anchor="right"
+                    factoryClass="me.platonov.buildFlex.FlexModulesToolWindow"/>
+    </extensions>
 </idea-plugin>
