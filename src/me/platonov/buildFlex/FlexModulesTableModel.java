@@ -9,6 +9,8 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -31,6 +33,47 @@ public class FlexModulesTableModel implements TableModel {
 
     public void clear() {
         list.clear();
+        fireTableChanged(new TableModelEvent(this));
+    }
+
+    public void sort() {
+        Collections.sort(list, new Comparator<FlexFacet>() {
+            @Override
+            public int compare(FlexFacet o1, FlexFacet o2) {
+                if (o1 == null && o2 == null) return 0;
+                if (o1 == null) return -1;
+                if (o2 == null) return 1;
+
+                return o1.getModule().getName().compareToIgnoreCase(o2.getModule().getName());
+            }
+        }
+        );
+        fireTableChanged(new TableModelEvent(this));
+    }
+
+    public boolean isAllSelected() {
+        boolean result = true;
+        for (FlexFacet flexFacet : list) {
+            final FlexFacetConfigurationImpl configuration = (FlexFacetConfigurationImpl) flexFacet.getConfiguration();
+            result = result && configuration.getFlexBuildConfiguration().DO_BUILD;
+        }
+
+        return result;
+    }
+
+    public void selectAll() {
+        for (FlexFacet flexFacet : list) {
+            final FlexFacetConfigurationImpl configuration = (FlexFacetConfigurationImpl) flexFacet.getConfiguration();
+            configuration.getFlexBuildConfiguration().DO_BUILD = true;
+        }
+        fireTableChanged(new TableModelEvent(this));
+    }
+
+    public void selectNone() {
+        for (FlexFacet flexFacet : list) {
+            final FlexFacetConfigurationImpl configuration = (FlexFacetConfigurationImpl) flexFacet.getConfiguration();
+            configuration.getFlexBuildConfiguration().DO_BUILD = false;
+        }
         fireTableChanged(new TableModelEvent(this));
     }
 
@@ -81,6 +124,7 @@ public class FlexModulesTableModel implements TableModel {
             final FlexFacet flexFacet = list.get(rowIndex);
             final FlexFacetConfigurationImpl configuration = (FlexFacetConfigurationImpl) flexFacet.getConfiguration();
             configuration.getFlexBuildConfiguration().DO_BUILD = ((Boolean) aValue);
+            fireTableChanged(new TableModelEvent(this, rowIndex));
         } else {
             throw new IllegalArgumentException("Can't update this column");
         }

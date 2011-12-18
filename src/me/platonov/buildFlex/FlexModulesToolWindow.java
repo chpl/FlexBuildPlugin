@@ -12,10 +12,18 @@ import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 /**
  * @author chaim
@@ -26,16 +34,34 @@ public class FlexModulesToolWindow implements ToolWindowFactory {
     private JPanel thePanel;
     private JButton refreshProjectTreeButton;
     private JTable theTable;
+    private JCheckBox selectAllCheckBox;
 
     private Project myProject;
 
-    FlexModulesTableModel model = new FlexModulesTableModel();
+    FlexModulesTableModel model;
 
     public FlexModulesToolWindow() {
+        model = new FlexModulesTableModel();
+
         refreshProjectTreeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 updateFacets();
+            }
+        });
+
+        selectAllCheckBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (selectAllCheckBox.isSelected()) model.selectAll();
+                else model.selectNone();
+            }
+        });
+
+        model.addTableModelListener(new TableModelListener() {
+            @Override
+            public void tableChanged(TableModelEvent e) {
+                selectAllCheckBox.setSelected(model.isAllSelected());
             }
         });
     }
@@ -77,6 +103,8 @@ public class FlexModulesToolWindow implements ToolWindowFactory {
                 }
             }
         }
+
+        model.sort();
     }
 
 

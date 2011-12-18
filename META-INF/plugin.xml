@@ -1,7 +1,7 @@
 <idea-plugin version="2">
     <name>Flex Modules</name>
     <description>Allow to manage which Flex modules are built by IntelliJ IDEA</description>
-    <version>1.0</version>
+    <version>1.1</version>
     <vendor>platonov.me</vendor>
     <idea-version since-build="8000"/>
 
